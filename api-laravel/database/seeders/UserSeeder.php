@@ -2,24 +2,35 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\User; // Importa o model User
-use Illuminate\Support\Facades\Hash; // Importa o Hash para criptografar a senha
+use App\Models\User;
+use App\Models\Role;
 
-class UserSeeder extends Seeder
+class AdminUserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Cria um usuário administrador e o associa ao seu perfil.
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin do Sistema',
-            'email' => 'admin@techsolutions.com',
-            'cpf' => '000.000.000-00', // CPF para o login de teste
-            'password' => Hash::make('Password@123'), // Senha de teste. O Hash::make criptografa.
-            'role' => 'Administrador', // O perfil do nosso usuário de teste
-        ]);
+        // 1. Busca o perfil de Administrador que foi criado pelo RoleSeeder
+        $adminRole = Role::where('slug', 'admin')->first();
+
+        // 2. Cria o usuário administrador se ele não existir
+        //    O método 'firstOrCreate' é ótimo para isso.
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@techsolutions.com'], // Chave para verificar se já existe
+            [
+                'name' => 'Admin do Sistema',
+                'cpf' => '11122233344', 
+                'password' => 'Password@123', 
+            ]
+        );
+
+        // 3. Atribui o perfil de admin ao usuário, se o perfil existir.
+        //    O método 'syncWithoutDetaching' anexa o perfil sem remover os que já existem.
+        if ($adminRole) {
+            $adminUser->roles()->syncWithoutDetaching([$adminRole->id]);
+        }
     }
 }
