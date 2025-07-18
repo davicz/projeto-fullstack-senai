@@ -47,7 +47,7 @@ class InvitationController extends Controller
             // Esta linha agora funciona, pois '$this->userService' foi definido no construtor.
             $user = $this->userService->createUserFromInvitation($request->validated());
 
-            return (new UserResource($user))
+            return (new UserResource($user->load('roles')))
                     ->additional(['mensagem' => 'Cadastro finalizado com sucesso!'])
                     ->response()
                     ->setStatusCode(201);
