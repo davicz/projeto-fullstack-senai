@@ -27,9 +27,8 @@ class InvitationService
             'invited_by_user_id' => auth()->id(), // Pega o ID do usuário logado que está convidando
         ]);
 
-        // TODO: Futuramente, aqui seria o local ideal para disparar o envio do e-mail.
-        // Mail::to($invitation->email)->send(new SendInviteEmail($invitation->token));
-
+        Mail::to($invitation->email)->send(new SendCollaboratorInvite($invitation->token));
+        
         return $invitation;
     }
 }
