@@ -3,40 +3,62 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SendInvitationRequest;   // Usa a Request
-use App\Http\Resources\InvitationResource;   // Usa o Resource
-use App\Services\InvitationService;            // Usa o Service
+use App\Http\Requests\FinalizeRegistrationRequest;
+use App\Http\Requests\SendInvitationRequest;
+use App\Http\Resources\InvitationResource;
+use App\Http\Resources\UserResource;
+use App\Services\InvitationService;
+use App\Services\UserService;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class InvitationController extends Controller
 {
-    // Injetamos o Service no construtor para que o Laravel o forneça automaticamente.
-    public function __construct(protected InvitationService $invitationService)
-    {
+    /**
+     * Injetamos os services no construtor para que fiquem disponíveis
+     * em todos os métodos do controller. Esta é a peça que faltava.
+     */
+    public function __construct(
+        protected InvitationService $invitationService,
+        protected UserService $userService
+    ) {
     }
 
     /**
-     * Armazena um novo convite no banco de dados.
-     *
-     * @param  \App\Http\Requests\SendInvitationRequest  $request
-     * @return \Illuminate\Http\JsonResponse
+     * Armazena um novo convite.
      */
     public function store(SendInvitationRequest $request)
     {
-        // 1. A validação já foi feita automaticamente pela SendInvitationRequest.
-        //    O controller recebe apenas dados validados e seguros.
-        $validatedData = $request->validated();
+        $invitation = $this->invitationService->createInvitation($request->validated());
 
-        // 2. O controller DELEGA a lógica de negócio para o Service.
-        //    Sua única responsabilidade é chamar o método correto.
-        $invitation = $this->invitationService->createInvitation($validatedData);
-
-        // 3. O controller DELEGA a formatação da resposta para o Resource.
-        //    Isso garante uma resposta consistente e segura.
         return (new InvitationResource($invitation))
                 ->additional(['mensagem' => 'Convite criado com sucesso!'])
                 ->response()
-                ->setStatusCode(201); // Retorna o status 201 Created
+                ->setStatusCode(201);
     }
 
-    // ... aqui você adicionará os outros métodos, como finalizeRegistration, etc.
+    /**
+     * Finaliza o cadastro de um novo colaborador a partir de um convite.
+     * Este método agora funcionará corretamente.
+     */
+    public function finalizeRegistration(FinalizeRegistrationRequest $request)
+    {
+        try {
+            // Esta linha agora funciona, pois '$this->userService' foi definido no construtor.
+            $user = $this->userService->createUserFromInvitation($request->validated());
+
+            return (new UserResource($user))
+                    ->additional(['mensagem' => 'Cadastro finalizado com sucesso!'])
+                    ->response()
+                    ->setStatusCode(201);
+
+        } catch (Exception $e) {
+            // Captura qualquer erro inesperado que o Service possa lançar.
+            Log::error('Falha ao finalizar cadastro: ' . $e->getMessage());
+
+            return response()->json([
+                'mensagem' => 'Ocorreu uma falha interna ao processar o seu cadastro.'
+            ], 500);
+        }
+    }
 }

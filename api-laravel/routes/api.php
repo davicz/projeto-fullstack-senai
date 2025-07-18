@@ -3,71 +3,44 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// 1. Importando todos os controllers que vamos usar
-use App\Http\Controllers\Auth\LoginController;
+// 1. Importando os controllers que vamos usar
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\InvitationController;
-use App\Http\Controllers\Api\CollaboratorProfileController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\DogController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Aqui nós registramos todas as rotas para a nossa API.
+| Aqui registramos as rotas para a nossa API.
 |
 */
 
+// ====================================================================
 // --- ROTAS PÚBLICAS ---
 // Rotas que qualquer pessoa pode acessar, sem precisar estar logada.
-// --------------------------------------------------------------------
+// ====================================================================
 
-// Endpoint para convidar um novo colaborador
-    Route::post('/invitations', [InvitationController::class, 'store']);
+// Rota para o usuário (admin) fazer o login e obter um token
+Route::post('/login', [AuthController::class, 'login']);
 
-// Endpoint para o usuário fazer o login com CPF e senha
-Route::post('/login', [LoginController::class, 'login']);
-
-Route::apiResource('dogs', DogController::class);
-
-// Endpoint para o colaborador finalizar o cadastro a partir do link do e-mail
-// (A lógica será criada em um RegistrationController no futuro)
-// Route::post('/register', [RegistrationController::class, 'register']);
+// Rota para o novo colaborador finalizar o cadastro a partir do link do e-mail
+Route::post('/invitations/finalize', [InvitationController::class, 'finalizeRegistration']);
 
 
+// ====================================================================
 // --- ROTAS PROTEGIDAS ---
-// Todas as rotas dentro deste grupo exigem que o usuário esteja autenticado
-// (ou seja, tenha feito login e esteja enviando um token válido).
-// --------------------------------------------------------------------
+// Rotas que exigem um token de autenticação (Bearer Token).
+// ====================================================================
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Rota simples para buscar os dados do usuário que está atualmente logado.
-    // O frontend usará isso para saber quem é o usuário e qual o seu perfil.
+    // Rota para um usuário autenticado (Admin/RH) criar um novo convite
+    Route::post('/invitations', [InvitationController::class, 'store']);
+
+    // Rota útil para o frontend verificar quem é o usuário logado
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        // Retorna o usuário logado com seus perfis carregados
+        return new \App\Http\Resources\UserResource($request->user()->load('roles'));
     });
 
-    // --- ROTAS COM CONTROLE DE PERFIL ---
-    // Rotas que só podem ser acessadas por perfis específicos.
-    // ----------------------------------------------------------------
-    
-    // Grupo de rotas que só podem ser acessadas por 'Administrador' ou 'Gente e Cultura'.
-    // Aqui usamos o middleware 'role' que criamos!
-    Route::middleware('role:Administrador,Gente e Cultura')->group(function() {
-        
-        // Endpoint para convidar um novo colaborador
-        //Route::post('/invitations', [InvitationController::class, 'store']);
-
-        // Endpoints para o CRUD de Perfis de Colaboradores
-        // Esta única linha cria:
-        // GET /collaborator-profiles (listar todos)
-        // GET /collaborator-profiles/{id} (ver um)
-        // PUT/PATCH /collaborator-profiles/{id} (atualizar um)
-        // DELETE /collaborator-profiles/{id} (deletar um)
-        Route::apiResource('collaborator-profiles', CollaboratorProfileController::class)->except(['store']);
-        
-        // Endpoint para listar todos os usuários (apenas como exemplo)
-        Route::get('/users', [UserController::class, 'index']);
-    });
 });

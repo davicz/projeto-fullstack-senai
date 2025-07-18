@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->string('token', 32)->unique();
-            $table->timestamp('registered_at')->nullable();
+            $table->string('email');
+            $table->string('token', 64)->unique();
+            $table->enum('status', ['Em Aberto', 'Finalizado', 'Vencido'])->default('Em Aberto');
+            $table->timestamp('expires_at')->nullable();
+            $table->foreignId('invited_by_user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });
     }

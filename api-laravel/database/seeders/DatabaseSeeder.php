@@ -8,13 +8,16 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Ponto de entrada para todos os seeders da aplicação.
      */
     public function run(): void
     {
-        // Esta linha diz ao Laravel para executar o nosso UserSeeder
+        // A ordem aqui é fundamental!
+        // 1. Primeiro, chamamos o RoleSeeder para criar os perfis.
+        // 2. Depois, chamamos o AdminUserSeeder que depende desses perfis.
         $this->call([
-            UserSeeder::class,
+            RoleSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }

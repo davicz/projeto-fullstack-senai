@@ -29,9 +29,6 @@ class SendInvitationRequest extends FormRequest
     {
         return [
             // Validações:
-            // 1. 'required': O campo email é obrigatório.
-            // 2. 'email': Deve ser um formato de e-mail válido.
-            // 3. 'unique:users,email': O e-mail não pode já existir na tabela de usuários.
             // 4. 'unique:invitations...': Não pode haver outro convite EM ABERTO para o mesmo e-mail.
             'email' => [
                 'required',
