@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendCollaboratorInvite; 
 use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Support\Str;

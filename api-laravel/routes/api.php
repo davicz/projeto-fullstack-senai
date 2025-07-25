@@ -34,6 +34,13 @@ Route::post('/invitations/finalize', [InvitationController::class, 'finalizeRegi
 // ====================================================================
 Route::middleware('auth:sanctum')->group(function () {
 
+
+    // Rota para listar todos os colaboradores
+    Route::get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
+
+    // Rota para visualizar um colaborador específico pelo seu ID
+    Route::get('/users/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
+    
     // Rota para um usuário autenticado (Admin/RH) criar um novo convite
     Route::post('/invitations', [InvitationController::class, 'store']);
 

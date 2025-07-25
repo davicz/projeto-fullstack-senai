@@ -22,15 +22,6 @@ class UserController extends Controller
     {
         //
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -45,5 +36,16 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+        /**
+     * Exibe o recurso especificado.
+     */
+    public function show(int $id)
+    {
+        // 1. Delega a busca do usuário para o Service
+        $user = $this->userService->findUserById($id);
+
+        // 2. Retorna o usuário encontrado, formatado pelo UserResource.
+        return new UserResource($user);
     }
 }

@@ -66,5 +66,20 @@ class UserService
             // 3e. Retorna o objeto do usuário recém-criado.
             return $user;
         });
+        /**
+         * Encontra um usuário específico pelo seu ID.
+         *
+         * @param int $id O ID do usuário a ser encontrado.
+         * @return \App\Models\User
+         */
+        public function findUserById(int $id)
+        {
+            // Lógica:
+            // 1. Usamos 'with('roles')' para já carregar os perfis do usuário.
+            // 2. Usamos 'findOrFail($id)' que é um atalho útil:
+            //    - Se encontrar o usuário, ele o retorna.
+            //    - Se NÃO encontrar, ele automaticamente lança um erro 404 Not Found.
+            return \App\Models\User::with('roles')->findOrFail($id);
+        }
     }
 }

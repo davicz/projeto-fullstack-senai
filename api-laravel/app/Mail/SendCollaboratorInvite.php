@@ -14,7 +14,8 @@ class SendCollaboratorInvite extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * O token do convite que sera usado no link do e-mail.
+     * O token do convite.
+     * Declarar como 'public' a torna automaticamente disponível na sua view/template.
      * @var string
      */
     public string $token;
@@ -24,32 +25,30 @@ class SendCollaboratorInvite extends Mailable
      *
      * @param string $token O token do convite vindo do InvitationService.
      */
-    public function __construct()
+    public function __construct(string $token)
     {
-        // Armazenamos o token recebido em uma propriedade publica
-        // para que ele fique disponivel automaticamente no template (view).
+        // 1. A CORREÇÃO ESTÁ AQUI:
+        // Armazenamos o token recebido na propriedade pública da classe.
         $this->token = $token;
     }
 
     /**
-     * Define o "envelope" da mensagem  (assunto, remetente, etc.).
-     * 
-     * @return \Illuminate\Mail\Mailables\Envelope
+     * Define o "envelope" da mensagem (assunto, etc.).
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Voce foi convidado para se juntar a TchnologySolutions!',
+            subject: 'Você foi convidado para se juntar à TechnologySolutions!',
         );
     }
 
     /**
-     * Define o conteudo da mensagem.
-     * @return \Illuminate\Mail\Mailables\Content
+     * Define o conteúdo da mensagem.
      */
     public function content(): Content
     {
-        // Aponta para o arquivo de template Markdown que o Laravel criou para nos.
+        // 2. AGORA O LARAVEL PODE CONSTRUIR A URL CORRETAMENTE:
+        // Ele usa a propriedade pública '$this->token' que definimos no construtor.
         return new Content(
             markdown: 'emails.invitations.collaborator',
             with: [
@@ -59,9 +58,7 @@ class SendCollaboratorInvite extends Mailable
     }
 
     /**
-     * Define os anexos da mensagem (nao usado aqui).
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * Define os anexos da mensagem.
      */
     public function attachments(): array
     {
