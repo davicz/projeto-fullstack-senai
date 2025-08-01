@@ -2,9 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\InvitationController;
 use App\Http\Controllers\Api\UserController;
 
@@ -12,46 +10,36 @@ use App\Http\Controllers\Api\UserController;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Aqui registramos as rotas para a nossa API.
-|
 */
 
-// ====================================================================
 // --- ROTAS PÚBLICAS ---
-// Rotas que qualquer pessoa pode acessar, sem precisar estar logada.
-// ====================================================================
-
-// Rota para o usuário (admin) fazer o login e obter um token
-Route::post('/login', [AuthController::class, 'login']);
-Route::apiResource('users', UserController::class);
-
-// Rota para o novo colaborador finalizar o cadastro a partir do link do e-mail
+Route::post('/login', [LoginController::class, 'login']);
 Route::post('/invitations/finalize', [InvitationController::class, 'finalizeRegistration']);
 
 
-// ====================================================================
 // --- ROTAS PROTEGIDAS ---
-// Rotas que exigem um token de autenticação (Bearer Token).
-// ====================================================================
 Route::middleware('auth:sanctum')->group(function () {
 
-
-    // Rota para listar todos os colaboradores
-    Route::get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
-
-    // Rota para visualizar um colaborador específico pelo seu ID
-    Route::get('/users/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
-    
-    // Rota para um usuário autenticado (Admin/RH) criar um novo convite
-    Route::post('/invitations', [InvitationController::class, 'store']);
-
-    Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('api.users.updateRole');
-
-    // Rota útil para o frontend verificar quem é o usuário logado
+    // Rota para obter os dados do utilizador autenticado
     Route::get('/user', function (Request $request) {
-        // Retorna o usuário logado com seus perfis carregados
         return new \App\Http\Resources\UserResource($request->user()->load('roles'));
     });
 
+    // Rota para criar um novo convite
+    Route::post('/invitations', [InvitationController::class, 'store']);
+
+    // --- ROTAS DE GESTÃO DE UTILIZADORES ---
+    // A ordem aqui é CRÍTICA. As rotas mais específicas devem vir PRIMEIRO.
+
+    // 1. Rota para EXPORTAR. É específica e deve vir antes da rota de 'show'.
+    Route::get('/users/export', [UserController::class, 'export'])->name('api.users.export');
+
+    // 2. Rota para LISTAR todos os utilizadores.
+    Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
+
+    // 3. Rota para MOSTRAR um utilizador específico. Como usa um parâmetro, vem depois das rotas estáticas.
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('api.users.show');
+
+    // 4. Rota para ATUALIZAR O PERFIL de um utilizador.
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('api.users.updateRole');
 });

@@ -28,10 +28,25 @@ class UserController extends Controller
      * Exibe uma lista paginada de usuários.
      * GET /api/users
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = User::query();
+
+                // 2. Verificamos se um parâmetro 'search' foi enviado na URL.
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+
+            // 3. Adicionamos a lógica de busca à nossa consulta.
+            // Esta consulta busca o termo em múltiplas colunas: name, email e cpf.
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('email', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('cpf', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
         // Busca todos os usuários, com paginação para não sobrecarregar a resposta.
-        $users = User::paginate(15);
+        $users = $query->orderBy('name')->paginate(15);
 
         // Retorna uma coleção de usuários, formatada pelo UserResource.
         return UserResource::collection($users);
@@ -75,22 +90,7 @@ class UserController extends Controller
      * Atualiza um usuário existente.
      * PUT/PATCH /api/users/{user}
      */
-    public function update(Request $request, User $user) // <-- Route-Model Binding aqui também
-    {
-        // Valida os dados. Note a regra de 'unique' para o email, que ignora o usuário atual.
-        $validatedData = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
-            // A validação de senha é opcional na atualização
-        ]);
-
-        // Atualiza os dados do usuário
-        $user->update($validatedData);
-
-        // Retorna o usuário atualizado.
-        return new UserResource($user);
-    }
-
+    
     public function updateRole(Request $request, User $user)
     {
         // 1. Autorização: Verificamos se o usuário logado pode realizar esta ação.
@@ -110,6 +110,76 @@ class UserController extends Controller
         // 4. Resposta: Retornamos o usuário atualizado, com o novo perfil carregado, formatado pelo resource.
         return new \App\Http\Resources\UserResource($user->load('roles'));
     }
+
+    public function export(Request $request)
+    {
+        // Reutilizamos a mesma lógica de busca do método index()
+        // para garantir que a exportação respeite os filtros.
+        $query = User::query();
+
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('email', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('cpf', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $users = $query->orderBy('name')->get();
+
+        // Define o nome do arquivo que será baixado
+        $fileName = 'colaboradores.csv';
+
+        // Define os cabeçalhos para o navegador entender que é um arquivo para download
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        // Cria o conteúdo do CSV
+        $callback = function() use ($users) {
+            $file = fopen('php://output', 'w');
+            
+            // Adiciona o cabeçalho do CSV
+            fputcsv($file, ['ID', 'Nome Completo', 'Email', 'CPF']);
+
+            // Adiciona os dados de cada usuário
+            foreach ($users as $user) {
+                fputcsv($file, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $user->cpf
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        // Retorna a resposta de streaming, que permite baixar o arquivo
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function update(Request $request, User $user) // <-- Route-Model Binding aqui também
+    {
+        // Valida os dados. Note a regra de 'unique' para o email, que ignora o usuário atual.
+        $validatedData = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
+            // A validação de senha é opcional na atualização
+        ]);
+
+        // Atualiza os dados do usuário
+        $user->update($validatedData);
+
+        // Retorna o usuário atualizado.
+        return new UserResource($user);
+    }
+
 
     /**
      * Remove um usuário do banco de dados.
