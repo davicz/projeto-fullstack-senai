@@ -3,9 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// 1. Importando os controllers que vamos usar
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\InvitationController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ use App\Http\Controllers\Api\InvitationController;
 
 // Rota para o usuário (admin) fazer o login e obter um token
 Route::post('/login', [AuthController::class, 'login']);
+Route::apiResource('users', UserController::class);
 
 // Rota para o novo colaborador finalizar o cadastro a partir do link do e-mail
 Route::post('/invitations/finalize', [InvitationController::class, 'finalizeRegistration']);
@@ -43,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Rota para um usuário autenticado (Admin/RH) criar um novo convite
     Route::post('/invitations', [InvitationController::class, 'store']);
+
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('api.users.updateRole');
 
     // Rota útil para o frontend verificar quem é o usuário logado
     Route::get('/user', function (Request $request) {

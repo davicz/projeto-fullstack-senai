@@ -25,19 +25,13 @@ class UserService
         $invitation = Invitation::where('token', $data['token'])->first();
 
         // Passo 2: Validar o convite.
-        // Se o convite não for encontrado, ou o status não for 'Em Aberto',
-        // ou a data atual for posterior à data de expiração, o convite é inválido.
         if (!$invitation || $invitation->status !== 'Em Aberto' || now()->isAfter($invitation->expires_at)) {
-            // Lançamos uma exceção de validação. O Laravel automaticamente a converterá
-            // em uma resposta de erro 422 para a API.
             throw ValidationException::withMessages([
                 'token' => 'Este token de convite é inválido, expirado ou já foi utilizado.'
             ]);
         }
 
         // Passo 3: Usar uma transação de banco de dados.
-        // Isso garante que TODAS as operações abaixo funcionem. Se uma falhar,
-        // todas as outras são desfeitas, mantendo o banco de dados consistente.
         return DB::transaction(function () use ($data, $invitation) {
             
             // 3a. Cria o novo usuário no banco de dados.
@@ -65,21 +59,25 @@ class UserService
 
             // 3e. Retorna o objeto do usuário recém-criado.
             return $user;
-        });
-        /**
-         * Encontra um usuário específico pelo seu ID.
-         *
-         * @param int $id O ID do usuário a ser encontrado.
-         * @return \App\Models\User
-         */
-        public function findUserById(int $id)
-        {
-            // Lógica:
-            // 1. Usamos 'with('roles')' para já carregar os perfis do usuário.
-            // 2. Usamos 'findOrFail($id)' que é um atalho útil:
-            //    - Se encontrar o usuário, ele o retorna.
-            //    - Se NÃO encontrar, ele automaticamente lança um erro 404 Not Found.
-            return \App\Models\User::with('roles')->findOrFail($id);
-        }
+
+        }); // Fim da transação do DB
+        
+    } // <--- ESTA É A CHAVE '}' QUE FALTAVA PARA FECHAR O MÉTODO createUserFromInvitation
+
+    /**
+     * Encontra um usuário específico pelo seu ID.
+     *
+     * @param int $id O ID do usuário a ser encontrado.
+     * @return \App\Models\User
+     */
+    public function findUserById(int $id)
+    {
+        // Lógica:
+        // 1. Usamos 'with('roles')' para já carregar os perfis do usuário.
+        // 2. Usamos 'findOrFail($id)' que é um atalho útil:
+        //    - Se encontrar o usuário, ele o retorna.
+        //    - Se NÃO encontrar, ele automaticamente lança um erro 404 Not Found.
+        return \App\Models\User::with('roles')->findOrFail($id);
     }
-}
+    
+} // <--- FIM DA CLASSE UserService. A chave extra que estava aqui foi removida.

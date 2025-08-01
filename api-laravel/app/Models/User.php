@@ -55,10 +55,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
-    public function roles(): BelongsToMany
+        /**
+     * Define a relação Many-to-Many com o modelo Role.
+     * Um usuário pode ter vários perfis (roles).
+     */
+    public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(\App\Models\Role::class, 'role_user');
+    }
+
+    /**
+     * Verifica se o usuário possui um determinado perfil pelo seu "slug" (nome amigável).
+     *
+     * @param string $roleSlug O slug do perfil a ser verificado (ex: 'admin').
+     * @return bool
+     */
+    public function hasRole(string $roleSlug): bool
+    {
+        // Acessa a relação 'roles' e verifica se existe algum com o slug fornecido.
+        return $this->roles()->where('slug', $roleSlug)->exists();
     }
 
     protected function cpf(): Attribute
