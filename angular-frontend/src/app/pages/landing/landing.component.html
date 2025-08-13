@@ -1,0 +1,104 @@
+
+<!-- src/app/pages/landing/landing.component.html -->
+
+<!-- No futuro, você pode adicionar o seu componente de Header aqui -->
+<!-- <app-header></app-header> -->
+
+<main class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-500">
+
+  <!-- Secção Principal (Herói) -->
+  <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+    <!-- Overlay escuro para legibilidade do texto -->
+    <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
+    <!-- Vídeo de fundo -->
+    <video autoplay muted loop playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none">
+      <source src="https://assets.mixkit.co/videos/preview/mixkit-people-working-in-a-modern-office-3523-large.mp4" type="video/mp4">
+      O seu navegador não suporta o vídeo.
+    </video>
+    <div class="relative z-20 p-8 max-w-4xl mx-auto">
+      <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 animate-fade-in-down">
+        TechnologySolutions: Inovação e Talento num só Lugar.
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-200 mb-8 animate-fade-in-up">
+        Modernizamos a gestão de talentos para que a sua empresa possa focar no que realmente importa: o crescimento.
+      </p>
+      <a routerLink="/login" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+        Aceder à Plataforma
+      </a>
+    </div>
+  </section>
+
+  <!-- Secção "Sobre Nós" -->
+  <section id="sobre" class="py-20 px-4">
+    <div class="container mx-auto text-center max-w-5xl">
+      <h2 class="text-4xl font-bold mb-4">Sobre a TechnologySolutions</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mb-12">
+        Somos uma empresa apaixonada por tecnologia e por pessoas. A nossa missão é simplificar processos complexos de Gente e Cultura, utilizando plataformas digitais intuitivas e seguras. Acreditamos que a tecnologia deve servir para potenciar o talento humano, e é isso que construímos todos os dias.
+      </p>
+      <div class="grid md:grid-cols-3 gap-10">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+          <h3 class="text-2xl font-semibold mb-3 text-blue-500">Segurança</h3>
+          <p>A nossa plataforma é construída com as mais altas práticas de segurança para proteger os dados da sua empresa e dos seus colaboradores.</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+          <h3 class="text-2xl font-semibold mb-3 text-blue-500">Escalabilidade</h3>
+          <p>Projetado para crescer consigo, o nosso sistema adapta-se desde startups a grandes corporações sem perder a performance.</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+          <h3 class="text-2xl font-semibold mb-3 text-blue-500">Usabilidade</h3>
+          <p>Interfaces limpas e processos intuitivos que garantem uma experiência agradável tanto para o RH quanto para os novos talentos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Secção "Vagas Abertas" -->
+  <section id="vagas" class="py-20 px-4 bg-white dark:bg-gray-800">
+    <div class="container mx-auto text-center max-w-5xl">
+      <h2 class="text-4xl font-bold mb-12">Junte-se a Nós</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <!-- Vaga 1 -->
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-2xl font-bold mb-2">Desenvolvedor(a) Backend Pleno (Laravel)</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">Remoto | Tempo Integral</p>
+          <p class="mb-4">Procuramos um(a) desenvolvedor(a) apaixonado(a) por Laravel para construir APIs robustas e escaláveis.</p>
+          <a href="#" class="text-blue-500 hover:underline font-semibold">Saber mais &rarr;</a>
+        </div>
+        <!-- Vaga 2 -->
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-2xl font-bold mb-2">Desenvolvedor(a) Frontend Sénior (Angular)</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">Híbrido (Lisboa) | Tempo Integral</p>
+          <p class="mb-4">Lidere o desenvolvimento de interfaces complexas e dinâmicas com Angular, focando em performance e UX.</p>
+          <a href="#" class="text-blue-500 hover:underline font-semibold">Saber mais &rarr;</a>
+        </div>
+        <!-- Vaga 3 -->
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-2xl font-bold mb-2">UX/UI Designer</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">Remoto | Meio Período</p>
+          <p class="mb-4">Crie experiências incríveis e interfaces intuitivas para os nossos produtos digitais.</p>
+          <a href="#" class="text-blue-500 hover:underline font-semibold">Saber mais &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Secção de Contacto -->
+  <section id="contato" class="py-20 px-4">
+    <div class="container mx-auto max-w-2xl text-center">
+      <h2 class="text-4xl font-bold mb-4">Entre em Contacto</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Tem alguma dúvida ou quer saber mais sobre as nossas soluções? Envie-nos uma mensagem!</p>
+      <form class="space-y-6">
+        <input type="text" placeholder="O seu Nome" class="w-full p-4 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="email" placeholder="O seu E-mail" class="w-full p-4 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <textarea rows="5" placeholder="A sua Mensagem" class="w-full p-4 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-md text-lg transition duration-300">
+          Enviar Mensagem
+        </button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- No futuro, você pode adicionar o seu componente de Rodapé aqui -->
+<!-- <app-footer></app-footer> -->

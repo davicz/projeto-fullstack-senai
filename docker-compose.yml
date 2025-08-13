@@ -1,30 +1,33 @@
-# /meu-projeto-fullstack/docker-compose.yml
+version: '3.8'
 
 services:
   # Serviço 1: A API Laravel (rodando PHP-FPM)
-  # O nome do serviço 'laravel-api' é um apelido interno do Docker, não precisa ser igual ao da pasta.
   laravel-api:
     build:
-      context: ./api-laravel # AJUSTADO: Aponta para sua pasta 'api-laravel'
+      context: ./api-laravel # Aponta para sua pasta 'api-laravel'
       dockerfile: Dockerfile
     container_name: laravel-api
     working_dir: /var/www/html
     volumes:
-      - ./api-laravel:/var/www/html # AJUSTADO: Mapeia sua pasta 'api-laravel'
+      - ./api-laravel:/var/www/html # Mapeia sua pasta 'api-laravel'
     depends_on:
       - postgres-db
+    networks: # <-- FALTAVA: Conecta o serviço à rede 'sail'
+      - sail
 
-  # Serviço 2: O Servidor Web (Nginx) que receberá os acessos para a API
+  # Serviço 2: O Servidor Web (Nginx)
   nginx-server:
     image: nginx:alpine
     container_name: nginx-server
     ports:
       - "8000:80"
     volumes:
-      - ./api-laravel:/var/www/html # AJUSTADO: Mapeia sua pasta 'api-laravel'
-      - ./api-laravel/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf # AJUSTADO: Busca a config dentro de 'api-laravel'
+      - ./api-laravel:/var/www/html
+      - ./api-laravel/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - laravel-api
+    networks: # <-- FALTAVA: Conecta o serviço à rede 'sail'
+      - sail
 
   # Serviço 3: O Banco de Dados PostgreSQL
   postgres-db:
@@ -35,18 +38,33 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-laravel_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - sail-postgres:/var/lib/postgresql/data # CORRIGIDO: Nome do volume padronizado
     ports:
       - "5432:5432"
+    networks: # <-- FALTAVA: Conecta o serviço à rede 'sail'
+      - sail
 
-  # Serviço 4: O Frontend Angular (continua comentado por enquanto)
-  # angular-frontend:
-  #   build:
-  #     context: ./angular-frontend
-  #     dockerfile: Dockerfile
-  #   container_name: angular-frontend
-  #   ports:
-  #     - "4200:80"
+  # Serviço 4: O Frontend Angular
+  angular-frontend:
+    build:
+      context: ./angular-frontend # Assumindo que o nome da pasta é 'angular-frontend'
+      dockerfile: Dockerfile
+    container_name: angular-frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      # CORRIGIDO: O caminho aqui deve ser o mesmo do 'context' acima
+      - ./angular-frontend:/app
+      - /app/node_modules
+    networks: # <-- FALTAVA: Conecta o serviço à rede 'sail'
+      - sail
 
+# Define a rede que permitirá a comunicação entre os contêineres
+networks:
+  sail:
+    driver: bridge
+
+# Define o volume que irá persistir os dados do banco de dados
 volumes:
-  pgdata: # "Declara" o volume de dados do postgres
+  sail-postgres: # CORRIGIDO: Nome do volume padronizado
+    driver: local

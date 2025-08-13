@@ -1,0 +1,95 @@
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4">
+  <div class="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8 md:p-12">
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Finalize o seu Cadastro</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">Preencha os seus dados para aceder à plataforma.</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Linha 1: Nome e E-mail -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome Completo</label>
+          <input id="name" formControlName="name" type="text" class="mt-1 w-full input-style">
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail (do convite)</label>
+          <input id="email" formControlName="email" type="email" class="mt-1 w-full input-style bg-gray-200 dark:bg-gray-700 cursor-not-allowed">
+        </div>
+      </div>
+
+      <!-- Linha 2: CPF e Celular -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CPF</label>
+          <input id="cpf" formControlName="cpf" type="text" placeholder="000.000.000-00" class="mt-1 w-full input-style">
+        </div>
+        <div>
+          <label for="celular" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Celular (Opcional)</label>
+          <input id="celular" formControlName="celular" type="text" placeholder="(00) 00000-0000" class="mt-1 w-full input-style">
+        </div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700">
+
+      <!-- Endereço -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="md:col-span-1">
+          <label for="cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP</label>
+          <input id="cep" formControlName="cep" type="text" placeholder="00000-000" (blur)="onCepBlur()" class="mt-1 w-full input-style">
+        </div>
+        <div class="md:col-span-2">
+          <label for="logradouro" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Logradouro</label>
+          <input id="logradouro" formControlName="logradouro" type="text" class="mt-1 w-full input-style">
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div>
+          <label for="bairro" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bairro</label>
+          <input id="bairro" formControlName="bairro" type="text" class="mt-1 w-full input-style">
+        </div>
+        <div>
+          <label for="localidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade</label>
+          <input id="localidade" formControlName="localidade" type="text" class="mt-1 w-full input-style">
+        </div>
+        <div>
+          <label for="uf" class="block text-sm font-medium text-gray-700 dark:text-gray-300">UF</label>
+          <input id="uf" formControlName="uf" type="text" class="mt-1 w-full input-style">
+        </div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700">
+
+      <!-- Senhas -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Crie uma Senha</label>
+          <input id="password" formControlName="password" type="password" class="mt-1 w-full input-style">
+          <p class="mt-1 text-xs text-gray-500">Mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo.</p>
+        </div>
+        <div>
+          <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirme a Senha</label>
+          <input id="password_confirmation" formControlName="password_confirmation" type="password" class="mt-1 w-full input-style">
+        </div>
+      </div>
+      <div *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('password_confirmation')?.touched" class="text-red-500 text-sm">
+        As senhas não coincidem.
+      </div>
+
+      <!-- Mensagens de Feedback -->
+      <div *ngIf="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md" role="alert">
+        <p>{{ errorMessage }}</p>
+      </div>
+      <div *ngIf="successMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md" role="alert">
+        <p>{{ successMessage }}</p>
+      </div>
+
+      <!-- Botão de Finalizar -->
+      <div>
+        <button type="submit" [disabled]="registerForm.invalid || successMessage" class="w-full flex justify-center py-3 px-4 button-style">
+          Finalizar Cadastro
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

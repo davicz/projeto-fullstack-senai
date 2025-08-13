@@ -1,0 +1,7 @@
+# Ignorar dependências do Node.js na raiz do projeto
+/node_modules
+/package-lock.json
+
+# Ficheiros de sistema
+.DS_Store
+Thumbs.db

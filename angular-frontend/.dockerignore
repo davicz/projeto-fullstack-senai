@@ -1,0 +1,6 @@
+# Ignora a pasta de dependências do Node.
+# A instalação deve ser feita dentro do contêiner.
+node_modules
+
+# Ignora os ficheiros de log de debug do npm
+npm-debug.log*
