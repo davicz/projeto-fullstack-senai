@@ -1,0 +1,74 @@
+<section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+<!-- Carrossel -->
+  <div class="relative z-20 w-full mx-auto">
+    <!-- Slides -->
+    <div class="overflow-hidden relative">
+      <div class="flex transition-transform duration-700 ease-in-out"
+           [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+        
+        <!-- Slide 1 -->
+        <div class="flex-shrink-0 bg-blue-950 h-screen w-full flex">
+          <!-- Conteúdo à esquerda -->
+          <div class="flex flex-col justify-center items-center text-white px-6 w-1/2">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6">Inovação em Gestão de Talentos</h1>
+            <p class="text-lg md:text-2xl text-gray-200 mb-8">
+              Conectamos empresas e profissionais através de soluções digitais modernas.
+            </p>
+            <a routerLink="/login"
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+              Aceder à Plataforma
+            </a>
+          </div>
+          <!-- Imagem à direita -->
+          <div class="w-1/2 h-full flex items-center justify-center relative">
+            <img [src]="images[0]" alt="Slide 1" class="absolute right-0 top-0 w-full h-full object-cover opacity-30" />
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="flex-shrink-0 bg-cyan-950 h-screen w-full flex">
+          <div class="flex flex-col justify-center items-center text-white px-6 w-1/2">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6">Vagas Estratégicas</h1>
+            <p class="text-lg md:text-2xl text-gray-200 mb-8">
+              Oferecemos oportunidades alinhadas com os objetivos de crescimento da sua empresa.
+            </p>
+            <a href="#vagas"
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+              Explorar Vagas
+            </a>
+          </div>
+          <div class="w-1/2 h-full flex items-center justify-center relative">
+            <img [src]="images[1]" alt="Slide 2" class="absolute right-0 top-0 w-full h-full object-cover opacity-30" />
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="flex-shrink-0 bg-sky-950 h-screen w-full flex">
+          <div class="flex flex-col justify-center items-center text-white px-6 w-1/2">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6">Conectamos Talento e Tecnologia</h1>
+            <p class="text-lg md:text-2xl text-gray-200 mb-8">
+              Ajudamos sua empresa a recrutar de forma ágil e eficaz com tecnologia de ponta.
+            </p>
+            <a href="#contato"
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+              Fale Conosco
+            </a>
+          </div>
+          <div class="w-1/2 h-full flex items-center justify-center relative">
+            <img [src]="images[2]" alt="Slide 3" class="absolute right-0 top-0 w-full h-full object-cover opacity-30" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botões de navegação -->
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-30">
+      <button *ngFor="let slide of [0,1,2]; let i = index"
+              (click)="goToSlide(i)"
+              class="w-4 h-4 rounded-full"
+              [ngClass]="i === currentSlide ? 'bg-blue-600' : 'bg-gray-400'">
+      </button>
+    </div>
+  </div>
+</section>

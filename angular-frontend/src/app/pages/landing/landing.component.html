@@ -2,31 +2,13 @@
 <!-- src/app/pages/landing/landing.component.html -->
 
 <!-- No futuro, você pode adicionar o seu componente de Header aqui -->
-<!-- <app-header></app-header> -->
+ <app-landing-header></app-landing-header>
 
 <main class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-500">
 
   <!-- Secção Principal (Herói) -->
-  <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
-    <!-- Overlay escuro para legibilidade do texto -->
-    <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
-    <!-- Vídeo de fundo -->
-    <video autoplay muted loop playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none">
-      <source src="https://assets.mixkit.co/videos/preview/mixkit-people-working-in-a-modern-office-3523-large.mp4" type="video/mp4">
-      O seu navegador não suporta o vídeo.
-    </video>
-    <div class="relative z-20 p-8 max-w-4xl mx-auto">
-      <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 animate-fade-in-down">
-        TechnologySolutions: Inovação e Talento num só Lugar.
-      </h1>
-      <p class="text-xl md:text-2xl text-gray-200 mb-8 animate-fade-in-up">
-        Modernizamos a gestão de talentos para que a sua empresa possa focar no que realmente importa: o crescimento.
-      </p>
-      <a routerLink="/login" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105 shadow-lg">
-        Aceder à Plataforma
-      </a>
-    </div>
-  </section>
+
+  <app-carousel></app-carousel>
 
   <!-- Secção "Sobre Nós" -->
   <section id="sobre" class="py-20 px-4">
