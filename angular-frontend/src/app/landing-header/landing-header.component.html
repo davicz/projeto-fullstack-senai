@@ -1,0 +1,58 @@
+<header class="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-5 md:px-8 z-50">
+  <!-- Logo -->
+  <div class="flex items-center">
+    <a class="flex items-center gap-2" href="/">
+      <svg class="h-8 w-auto text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"/>
+      </svg>
+      <span class="font-bold text-lg md:text-xl text-blue-600">TechnologySolutions</span>
+    </a>
+  </div>
+
+  <!-- Menu de navegação central (desktop) -->
+  <nav class="hidden md:flex flex-1 justify-center space-x-8">
+    <a href="#sobre" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 transition">Sobre</a>
+    <a href="#vagas" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 transition">Vagas</a>
+    <a href="#contato" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 transition">Contato</a>
+  </nav>
+
+  <!-- Ações -->
+  <div class="flex items-center space-x-4">
+    <!-- Botão de tema -->
+    <button (click)="toggleTheme()" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none">
+      <!-- Ícone de Sol -->
+      <svg *ngIf="!isDarkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+      <!-- Ícone de Lua -->
+      <svg *ngIf="isDarkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+    </button>
+
+    <!-- Botão de Login (desktop) -->
+    <a routerLink="/login" class="hidden md:inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">
+      Login
+    </a>
+
+    <!-- Botão Menu Mobile -->
+    <button (click)="toggleMenu()" class="md:hidden focus:outline-none">
+      <svg *ngIf="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg *ngIf="isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Menu mobile -->
+<div *ngIf="isMenuOpen" class="md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex flex-col items-center space-y-4 py-6 z-40">
+  <a href="#sobre" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 transition">Sobre</a>
+  <a href="#vagas" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 transition">Vagas</a>
+  <a href="#contato" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 transition">Contato</a>
+  <a routerLink="/login" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">
+    Login
+  </a>
+</div>
